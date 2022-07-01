@@ -43,3 +43,4 @@ plt.plot(t_array, x_array, label='x (m)')
 plt.plot(t_array, v_array, label='v (m/s)')
 plt.legend()
 plt.show()
+
