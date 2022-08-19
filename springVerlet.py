@@ -12,7 +12,7 @@ def run():
 
     # simulation time, timestep and time
     t_max = 1000
-    dt = 0.1 #! inital 0.1 is too small, values increase 
+    dt = 1 #! inital 0.1 is too small, values increase 
     t_array = np.arange(0, t_max, dt)
 
     # initialise empty lists to record trajectories
