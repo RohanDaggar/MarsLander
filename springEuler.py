@@ -1,8 +1,9 @@
-    # uncomment the next line if running in a notebook
-    # %matplotlib inline
-    import numpy as np
-    import matplotlib.pyplot as plt
+# uncomment the next line if running in a notebook
+# %matplotlib inline
+import numpy as np
+import matplotlib.pyplot as plt
 
+def run():
     # mass, spring constant, initial position and velocity
     m = 1
     k = 1
@@ -45,5 +46,5 @@
     plt.show()
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     run()
