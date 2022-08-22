@@ -46,7 +46,7 @@ def runMassSpring():
     plt.show()
 
 def runThreeD():
-    scenario = '2'
+    scenario = '0'
     while scenario not in ['1','2','3','4']:
         print("Pick scenario:")
         print("1. Straight down descent ")
@@ -76,15 +76,15 @@ def runThreeD():
         t_max = 2*orbitalTime
         dt = orbitalTime/10000
     elif scenario == '3':
-        r = np.array([[5000000+marsRad],[0],[0]])
-        v = np.array([[1000],[3000],[0]])
-        t_max = 5000
-        dt = 0.1
+        r = np.array([[1000000+marsRad],[0],[0]])
+        v = np.array([[1300],[3400],[0]])
+        t_max = 20000
+        dt = 2
     elif scenario == '4':
-        r = np.array([[1000000000],[0],[0]])
-        v = np.array([[10],[0],[0]])
-        t_max = 500
-        dt = 0.1
+        r = np.array([[1000000+marsRad],[1000000+marsRad],[0]])
+        v = np.array([[-2000],[3500],[0]])
+        t_max = 20000
+        dt = 5
     else:
         raise RuntimeError
     
@@ -133,8 +133,6 @@ def runThreeD():
     else:
         plt.figure("position")
         plt.clf()
-        #plt.xlabel('x position (m)')
-        #plt.ylabel('y position (m)')
         plt.grid()
         plt.xlim(-3*marsRad,3*marsRad)
         plt.ylim(-3*marsRad,3*marsRad)
