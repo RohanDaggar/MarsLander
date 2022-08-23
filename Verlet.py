@@ -71,26 +71,26 @@ def runThreeD():
     
     # Initial numpy arrays to store position, velocity, max time and time step
     if scenario == '1': 
-        r = np.array([[100000+marsRad],[0],[0]])
-        v = np.array([[0],[0],[0]])
+        position = np.array([[100000+marsRad],[0],[0]])
+        velocity = np.array([[0],[0],[0]])
         t_max = 500
         dt = 0.1
     elif scenario == '2':
         orbitalRad = 1000000 +marsRad
         circOrbVel = math.sqrt(G*M/(orbitalRad))
         orbitalTime = 2 * math.pi * math.sqrt(orbitalRad**3/(G*M))
-        r = np.array([[orbitalRad],[0],[0]])
-        v = np.array([[0],[circOrbVel],[0]])
+        position = np.array([[orbitalRad],[0],[0]])
+        velocity = np.array([[0],[circOrbVel],[0]])
         t_max = 2*orbitalTime
         dt = orbitalTime/10000
     elif scenario == '3':
-        r = np.array([[1000000+marsRad],[0],[0]])
-        v = np.array([[1300],[3400],[0]])
+        position = np.array([[1000000+marsRad],[0],[0]])
+        velocity = np.array([[1300],[3400],[0]])
         t_max = 20000
         dt = 2
     elif scenario == '4':
-        r = np.array([[1000000+marsRad],[1000000+marsRad],[0]])
-        v = np.array([[-2000],[3500],[0]])
+        position = np.array([[1000000+marsRad],[1000000+marsRad],[0]])
+        velocity = np.array([[-2000],[3500],[0]])
         t_max = 20000
         dt = 5
     else:
@@ -98,38 +98,34 @@ def runThreeD():
     
     # time array created 
     t_array = np.arange(0, t_max, dt)
-    #initalise np arrays (not sure how to not put 0s there so its removed later)
-    position = np.array([[0],[0],[0]])
-    velocity = np.array([[0],[0],[0]])
-    #array for the radius of mars to see in the plots
-    marsmarsRadius = np.full((3,int(t_max/dt)), marsRad)
+
     
     # Initial calculation for the first step
-    
-    Force = - G * M * m * r / np.linalg.norm(r)**3
-    next_position = position + dt*v + 0.5 * dt * dt * Force/m
-    next_velocity = (next_position-position)/dt
-    
+    Force = - G * M * m * position / np.linalg.norm(position)**3
+    next_position = position + dt*velocity + 0.5 * dt * dt * Force/m
     position = np.hstack((position,next_position))
+    
+    next_velocity = (position[:, [-1]] - position[:, [-2]])/dt
     velocity = np.hstack((velocity,next_velocity))
     
+    #! r = psootio n.copy! fix this
     
     # Verlet integration
-    for t in t_array:
-        
-        # append current state to trajectories
-        position = np.hstack((position,r))
-        velocity = np.hstack((velocity,v))
+    for t in t_array[:-2]: #2 less itterations needed as the initial condition is t=0, and t=dt is done above
         
         # calculate new position and velocity
-        Force = - G * M * m * r / np.linalg.norm(r)**3
-        r = r + dt * v
-        v = v + dt * Force / m
+        Force = - G * M * m * next_position / np.linalg.norm(next_position)**3 # next_position is equal to position[:,[-1]] at this point and for the next line too
+        next_position = 2*next_position - position[:,[-2]] + dt * dt * Force / m # next_position is equal to position[:,[-1]] at this point and for the next line too
+        next_velocity = (next_position - position[:,[-1]])/dt
         
-        
-    #this step is needed to remove the initial 0s created
-    position = np.array([np.delete(position[0],0), np.delete(position[1],0), np.delete(position[2],0)])
-    velocity = np.array([np.delete(velocity[0],0), np.delete(velocity[1],0), np.delete(velocity[2],0)])
+        # append current state to trajectories
+        position = np.hstack((position,next_position))
+        velocity = np.hstack((velocity,next_velocity))
+
+    
+    
+    #array for the radius of mars to see in the plots
+    marsmarsRadius = np.full((3,int(t_max/dt)), marsRad)
     
     # plot the position-time graph according to the scenario
     if scenario == '1':
@@ -162,5 +158,48 @@ def runThreeD():
         plt.show()
 
 
+def test():
+    
+    # Gravitational constant, mass of planet (mars), mass of moving body, radius of planet (mars)
+    G = 6.6743e-11
+    M = 6.42e23
+    m = 1
+    marsRad = 3389500
+    '''
+    position = np.array([[100000+marsRad],[0],[0]])
+    velocity = np.array([[0],[0],[0]])
+    t_max = 500
+    dt = 0.1
+        
+    # Initial calculation for the first step
+    Force = - G * M * m * position / np.linalg.norm(position)**3
+    next_position = position + dt*velocity + 0.5 * dt * dt * Force/m
+    position = np.hstack((position,next_position))
+    
+    next_velocity = (position[:, -1] - position[:, -2])/dt
+    velocity = np.hstack((velocity,next_velocity))
+    
+    print(position)
+    print(velocity)
+    
+    position = np.array([[100000],[0],[0]])
+    next_position = position - 5000
+    position = np.hstack((position,next_position))
+    
+    print(position)
+    print(position[:,[-1]])'''
+    
+    # time array created 
+    t_max = 10
+    dt = 1
+    t_array = np.arange(0, t_max, dt)
+    
+    print(t_array)
+    print(t_array[:-1])
+
+
 if __name__ == "__main__":
     runThreeD()
+    #test()
+    
+    
