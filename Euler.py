@@ -98,7 +98,7 @@ def runThreeD():
     v = velocity.copy()
     
     # Euler integration
-    for t in t_array:
+    for t in t_array[:-1]:
         
         # calculate new position and velocity
         Force = - G * M * m * r / np.linalg.norm(r)**3
@@ -144,6 +144,4 @@ def runThreeD():
 
 if __name__ == "__main__":
     runThreeD()
-    position = np.array([[10000,500,250],[0,0,0],[0,0,0]])
-    r = np.array([[-500],[0],[0]])
     

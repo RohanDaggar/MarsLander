@@ -108,8 +108,6 @@ def runThreeD():
     next_velocity = (position[:, [-1]] - position[:, [-2]])/dt
     velocity = np.hstack((velocity,next_velocity))
     
-    #! r = psootio n.copy! fix this
-    
     # Verlet integration
     for t in t_array[:-2]: #2 less itterations needed as the initial condition is t=0, and t=dt is done above
         
@@ -200,6 +198,3 @@ def test():
 
 if __name__ == "__main__":
     runThreeD()
-    #test()
-    
-    
