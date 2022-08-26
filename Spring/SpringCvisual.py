@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 def run():
 
-    results = np.loadtxt('trajectories.txt')
+    results = np.loadtxt('Spring/trajectories.txt')
     plt.figure(1)
     plt.clf()
     plt.xlabel('time (s)')

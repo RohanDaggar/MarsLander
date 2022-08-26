@@ -19,7 +19,7 @@ int main()
 
   // simulation time and timestep
   t_max = 100;
-  dt = 0.1;
+  dt = 0.001;
 
   // Euler integration
   for (t = 0; t <= t_max; t = t + dt)
