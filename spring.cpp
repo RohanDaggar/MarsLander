@@ -57,7 +57,7 @@ int main()
           }
           else {
               a = x;
-              x = 2 * x - x_list[-2] + dt * dt * -k * x / m;
+              x = 2 * x - x_list[x_list.size() - 2] + dt * dt * -k * x / m;
               v = (x - a) / dt;
           }
       }
