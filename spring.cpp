@@ -19,7 +19,7 @@ int main()
 
   // simulation time and timestep
   t_max = 100;
-  dt = 0.001;
+  dt = 0.01;
 
   int choice;
   cout << "Enter 1 for Euler and 2 for Verlet: ";
