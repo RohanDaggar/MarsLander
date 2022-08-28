@@ -18,8 +18,5 @@
     <ClCompile Include="..\spring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpringVerlet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

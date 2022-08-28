@@ -21,19 +21,46 @@ int main()
   t_max = 100;
   dt = 0.001;
 
-  // Euler integration
-  for (t = 0; t <= t_max; t = t + dt)
-  {
+  int choice;
+  cout << "Enter 1 for Euler and 2 for Verlet: ";
+  cin >> choice;
+  if (choice == 1) {
+      // Euler integration
+      for (t = 0; t <= t_max; t = t + dt)
+      {
 
-    // append current state to trajectories
-    t_list.push_back(t);
-    x_list.push_back(x);
-    v_list.push_back(v);
+          // append current state to trajectories
+          t_list.push_back(t);
+          x_list.push_back(x);
+          v_list.push_back(v);
 
-    // calculate new position and velocity
-    a = -k * x / m;
-    x = x + dt * v;
-    v = v + dt * a;
+          // calculate new position and velocity
+          a = -k * x / m;
+          x = x + dt * v;
+          v = v + dt * a;
+      }
+  }
+  else {
+      // Verlet integration
+      for (t = 0; t <= t_max; t = t + dt)
+      {
+          // append current state to trajectories
+          t_list.push_back(t);
+          x_list.push_back(x);
+          v_list.push_back(v);
+
+          // calculate new position and velocity
+          if (t == 0) {
+              a = x;
+              x = x + v * dt + 0.5 * dt * dt * -k * x;
+              v = (x - a) / dt;
+          }
+          else {
+              a = x;
+              x = 2 * x - x_list[-2] + dt * dt * -k * x / m;
+              v = (x - a) / dt;
+          }
+      }
   }
 
   // Write the trajectories to file
