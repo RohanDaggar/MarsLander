@@ -43,7 +43,8 @@ void numerical_dynamics (void)
         velocity = 0.5 * (new_position - position) / delta_t;
     }
 
-
+    previous_position = position;
+    position = new_position;
 
   // Here we can apply an autopilot to adjust the thrust, parachute and attitude
   if (autopilot_enabled) autopilot();
