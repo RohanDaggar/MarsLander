@@ -23,8 +23,27 @@ void autopilot (void)
 void numerical_dynamics (void)
   // This is the function that performs the numerical integration to update the
   // lander's pose. The time step is delta_t (global variable).
+  // 
 {
-  // INSERT YOUR CODE HERE
+    static vector3d previous_position;
+    vector3d force_on_lander;
+    vector3d new_position;
+    double lander_mass = UNLOADED_LANDER_MASS + fuel * FUEL_CAPACITY * FUEL_DENSITY;
+
+
+    //First we calculate the forces currently on the lander. This includes thrust, drag and gravity
+    force_on_lander = thrust_wrt_world() - 0.5 * atmospheric_density(position) * DRAG_COEF_LANDER * 3.13159 * LANDER_SIZE*LANDER_SIZE * velocity.abs2() * velocity.norm() - GRAVITY * MARS_MASS * lander_mass * position.norm() / position.abs2();
+
+    if (simulation_time == 0.0) {
+        new_position = position + velocity * delta_t + 0.5 * (delta_t * delta_t * force_on_lander) / lander_mass;
+        velocity = 0.5 * (new_position - position) / delta_t;
+    }
+    else {
+        new_position = 2 * position - previous_position + (delta_t * delta_t * force_on_lander) / lander_mass;
+        velocity = 0.5 * (new_position - position) / delta_t;
+    }
+
+
 
   // Here we can apply an autopilot to adjust the thrust, parachute and attitude
   if (autopilot_enabled) autopilot();
