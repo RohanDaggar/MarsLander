@@ -32,7 +32,7 @@ void numerical_dynamics (void)
 
 
     //First we calculate the forces currently on the lander. This includes thrust, drag and gravity
-    force_on_lander = thrust_wrt_world() - 0.5 * atmospheric_density(position) * DRAG_COEF_LANDER * 3.13159 * LANDER_SIZE*LANDER_SIZE * velocity.abs2() * velocity.norm() - GRAVITY * MARS_MASS * lander_mass * position.norm() / position.abs2();
+    force_on_lander = thrust_wrt_world() - 0.5 * atmospheric_density(position) * DRAG_COEF_LANDER * 3.1315926535897932384626 * LANDER_SIZE*LANDER_SIZE * velocity.abs2() * velocity.norm() - GRAVITY * MARS_MASS * lander_mass * position.norm() / position.abs2();
 
     if (simulation_time == 0.0) {
         new_position = position + velocity * delta_t + 0.5 * (delta_t * delta_t * force_on_lander) / lander_mass;
@@ -40,7 +40,7 @@ void numerical_dynamics (void)
     }
     else {
         new_position = 2 * position - previous_position + (delta_t * delta_t * force_on_lander) / lander_mass;
-        velocity = 0.5 * (new_position - position) / delta_t;
+        velocity = (new_position - position) / delta_t;
     }
 
     previous_position = position;
