@@ -32,8 +32,14 @@ void numerical_dynamics (void)
 
 
     //First we calculate the forces currently on the lander. This includes thrust, drag and gravity
-    force_on_lander = thrust_wrt_world() - 0.5 * atmospheric_density(position) * DRAG_COEF_LANDER * 3.1315926535897932384626 * LANDER_SIZE*LANDER_SIZE * velocity.abs2() * velocity.norm() - GRAVITY * MARS_MASS * lander_mass * position.norm() / position.abs2();
+    vector3d drag = -0.5 * atmospheric_density(position) * DRAG_COEF_LANDER * 3.1315926536 * LANDER_SIZE * LANDER_SIZE * velocity.abs2() * velocity.norm();
+    if (parachute_status == DEPLOYED) {
+        drag += -0.5 * atmospheric_density(position) * DRAG_COEF_CHUTE * 5 * 4 * LANDER_SIZE * LANDER_SIZE * velocity.abs2() * velocity.norm();
+    }
+    vector3d gravity = -GRAVITY * MARS_MASS * lander_mass * position.norm() / position.abs2();
+    force_on_lander = thrust_wrt_world() + drag + gravity;
 
+    // now a verlet algorithm is performed to find the next steps in position and velocity
     if (simulation_time == 0.0) {
         new_position = position + velocity * delta_t + 0.5 * (delta_t * delta_t * force_on_lander) / lander_mass;
         velocity = 0.5 * (new_position - position) / delta_t;
@@ -70,7 +76,7 @@ void initialize_simulation (void)
   scenario_description[3] = "polar launch at escape velocity (but drag prevents escape)";
   scenario_description[4] = "elliptical orbit that clips the atmosphere and decays";
   scenario_description[5] = "descent from 200km";
-  scenario_description[6] = "";
+  scenario_description[6] = "literally land the lander";
   scenario_description[7] = "";
   scenario_description[8] = "";
   scenario_description[9] = "";
@@ -144,6 +150,14 @@ void initialize_simulation (void)
     break;
 
   case 6:
+    // a descent from 1 m up
+    position = vector3d(0.0, (MARS_RADIUS + 1), 0.0);
+    velocity = vector3d(0.0, 0.0, 0.0);
+    orientation = vector3d(0.0, 0.0, 0.0);
+    delta_t = 0.1;
+    parachute_status = DEPLOYED;
+    stabilized_attitude = true;
+    autopilot_enabled = false;
     break;
 
   case 7:
