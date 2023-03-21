@@ -23,7 +23,7 @@ void autopilot (void)
     double lander_mass = UNLOADED_LANDER_MASS + fuel * FUEL_CAPACITY * FUEL_DENSITY;
     double delta = (GRAVITY * MARS_MASS * lander_mass / position.abs2()) / MAX_THRUST;
 
-    if (parachute_status == NOT_DEPLOYED && safe_to_deploy_parachute()) {
+    if (parachute_status == NOT_DEPLOYED && safe_to_deploy_parachute() && (position.abs() - MARS_RADIUS) < 40000) { // activation of the parachute requirements
         parachute_status = DEPLOYED;
     }
     /*
