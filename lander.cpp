@@ -18,28 +18,24 @@ void autopilot (void)
   // Autopilot to adjust the engine throttle. This does not control the parachute and leaves the attitude stabilizer engaged
 {
   // These are constants defined to run the autopilot. These are manually tuned
-    double Kh = 0.005; // positive constant that controlls the descent
-    double Kp = 0.6; // positive constant known as the controller gain
-    double delta = 0.5;
+    double Kh = 0.02; // positive constant that controlls the descent
+    double Kp = 2; // positive constant known as the controller gain
+    double lander_mass = UNLOADED_LANDER_MASS + fuel * FUEL_CAPACITY * FUEL_DENSITY;
+    double delta = (GRAVITY * MARS_MASS * lander_mass / position.abs2()) / MAX_THRUST;
 
+    if (parachute_status == NOT_DEPLOYED && safe_to_deploy_parachute()) {
+        parachute_status = DEPLOYED;
+    }
     /*
     The idea here is that the descent rate should decrease linearly as the lander approaches the surface.
     The error should be positive if the lander is approaching too quickly, and negative when the lander is decending too slowly.
     */
     double error = -(0.5 + Kh * (position.abs() - MARS_RADIUS) + velocity * position.norm());
     double Pout = Kp * error;
-    cout << "error = " << error << endl;
-    cout << "Pout = " << Pout << endl;
 
-    if (Pout <= -delta) {
-        throttle = 0;
-    }
-    else if (Pout < 1 - delta) {
-        throttle = delta + Pout;
-    }
-    else {
-        throttle = 1;
-    }
+    if (Pout <= -delta) throttle = 0;
+    else if (Pout < 1 - delta) throttle = delta + Pout;
+    else throttle = 1;
 }
 
 void numerical_dynamics (void)
